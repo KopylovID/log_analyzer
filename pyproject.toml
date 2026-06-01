@@ -5,8 +5,11 @@ description = "Анализатор журналов ngnix"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
+    "pydantic>=2.13.4",
+    "pydantic-settings>=2.14.1",
     "pytest>=9.0.3",
     "ruff>=0.15.15",
+    "structlog>=25.5.0",
 ]
 
 [tool.ruff]
@@ -24,8 +27,9 @@ select = [
 ]
 
 ignore = [
-    "UP035", # Отключил упоминание deprecated Dict
-    "UP006"  # Отключил упоминание Use `dict` instead of `Dict` for type annotation
+    "UP035",  # Отключил упоминание deprecated Dict
+    "UP006",  # Отключил упоминание Use `dict` instead of `Dict` for type annotation
+    "I001"    # Отключил упоминания об некорректных импортах
 ]
 
 [tool.ruff.format]

@@ -10,3 +10,12 @@ wheels/
 # Virtual environments
 .venv
 .idea
+
+# data
+.env
+data/
+log/*
+reports/*
+
+# common
+!*/.gitkeep
