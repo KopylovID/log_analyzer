@@ -1,7 +1,33 @@
 [project]
 name = "log-analyzer"
 version = "0.1.0"
-description = "Add your description here"
+description = "Анализатор журналов ngnix"
 readme = "README.md"
 requires-python = ">=3.13"
-dependencies = []
+dependencies = [
+    "pytest>=9.0.3",
+    "ruff>=0.15.15",
+]
+
+[tool.ruff]
+line-length = 120
+target-version = "py313"
+src = ["src"]
+
+[tool.ruff.lint]
+select = [
+    "E",    # ошибки
+    "W",    # предупреждения
+    "F",    # неиспользуемые импорты/переменные
+    "I",    # сортировка импортов
+    "UP",   # современный синтаксис
+]
+
+ignore = [
+    "UP035", # Отключил упоминание deprecated Dict
+    "UP006"  # Отключил упоминание Use `dict` instead of `Dict` for type annotation
+]
+
+[tool.ruff.format]
+quote-style = "single"
+indent-style = "space"
