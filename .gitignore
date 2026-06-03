@@ -13,8 +13,8 @@ wheels/
 
 # data
 .env
-data/
-log/*
+app-logs/*
+logs/*
 reports/*
 
 # common

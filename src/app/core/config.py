@@ -1,7 +1,12 @@
-from pydantic import DirectoryPath
-from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic import DirectoryPath, Field
+from pydantic_settings import (
+    BaseSettings,
+    SettingsConfigDict,
+    JsonConfigSettingsSource,
+)
 
-from .config_default import config as config_default
+from .config_default import config as config_default, logger_config
+from typing import Optional
 
 
 class ConfigBase(BaseSettings):
@@ -23,16 +28,15 @@ class LogConfig(ConfigBase):
     model_config = SettingsConfigDict(env_prefix='LOG_', extra='ignore')
 
     dir: DirectoryPath = config_default['LOG_DIR']
+    name: str | None = None
     name_template: str = config_default['LOG_NAME_TEMPLATE']
-    name_template_arch: str = config_default['LOG_NAME_TEMPLATE_ARCH']
 
 
 class Config:
-
-    def __init__(self, env_file:str = '.env'):
-        self.__env_file: str = env_file
+    def __init__(self, env_file: Optional[str] = '.env', **kwargs):
         self.report: ReportConfig = ReportConfig(_env_file=env_file)
         self.log: LogConfig = LogConfig(_env_file=env_file)
+        self.logger = logger_config
 
     @classmethod
     def load(cls, env_file: str = '.env') -> 'Config':

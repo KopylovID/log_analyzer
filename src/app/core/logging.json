@@ -1,13 +1,4 @@
-config = {
-    'REPORT_SIZE': 1000,
-    'REPORT_DIR': './reports',
-    'REPORT_NAME_TEMPLATE': 'report-${YEAR}.${MONTH}.${DAY}.html',
-
-    'LOG_DIR': './logs',
-    'LOG_NAME_TEMPLATE': r'nginx-access-ui\.log-(\d{4})(\d{2})(\d{2})(\.gz){0,1}'
-}
-
-logger_config = {
+{
   "version": 1,
   "formatters": {
     "simple": {
