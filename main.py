@@ -5,7 +5,6 @@ import logging.config
 
 from src.app import Config
 from src.app import LogAnalizer
-import json
 
 structlog.configure(
     processors=[
@@ -42,7 +41,7 @@ def main():
         la = LogAnalizer(config, logger)
         la.analize()
 
-    except Exception as exc:
+    except BaseException as exc:
         logger.error(exc, exc_info=True)
 
     logger.info('Завершение')
