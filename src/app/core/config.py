@@ -1,12 +1,13 @@
-from pydantic import DirectoryPath, Field
+from pydantic import DirectoryPath, FilePath
 from pydantic_settings import (
     BaseSettings,
     SettingsConfigDict,
-    JsonConfigSettingsSource,
 )
+from pathlib import Path
 
 from .config_default import config as config_default, logger_config
-from typing import Optional
+
+BASE_PATH = Path(__file__).resolve().parent
 
 
 class ConfigBase(BaseSettings):
@@ -22,6 +23,7 @@ class ReportConfig(ConfigBase):
     size: int = config_default['REPORT_SIZE']
     dir: DirectoryPath = config_default['REPORT_SIZE']
     name_template: str = config_default['REPORT_NAME_TEMPLATE']
+    template_path: FilePath = BASE_PATH.joinpath(config_default['REPORT_TEMPLATE_PATH'])
 
 
 class LogConfig(ConfigBase):
@@ -30,10 +32,11 @@ class LogConfig(ConfigBase):
     dir: DirectoryPath = config_default['LOG_DIR']
     name: str | None = None
     name_template: str = config_default['LOG_NAME_TEMPLATE']
+    error_threshold: int = config_default['LOG_ERROR_THRESHOLD']
 
 
 class Config:
-    def __init__(self, env_file: Optional[str] = '.env', **kwargs):
+    def __init__(self, env_file: str | None = '.env', **kwargs):
         self.report: ReportConfig = ReportConfig(_env_file=env_file)
         self.log: LogConfig = LogConfig(_env_file=env_file)
         self.logger = logger_config

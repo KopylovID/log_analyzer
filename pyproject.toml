@@ -14,7 +14,7 @@ dependencies = [
 ]
 
 [tool.ruff]
-line-length = 120
+line-length = 150
 target-version = "py313"
 src = ["src"]
 
@@ -30,9 +30,22 @@ select = [
 ignore = [
     "UP035",  # Отключил упоминание deprecated Dict
     "UP006",  # Отключил упоминание Use `dict` instead of `Dict` for type annotation
+    "UP015",  # Отключил что mode указывать не нужно при открытии файла
     "I001"    # Отключил упоминания об некорректных импортах
+
 ]
 
 [tool.ruff.format]
 quote-style = "single"
 indent-style = "space"
+
+[tool.pytest.ini_options]
+minversion = "9.0"
+testpaths = ["tests"]
+addopts = "-v"
+
+[dependency-groups]
+dev = [
+    "pytest>=9.0.3",
+    "ruff>=0.15.15",
+]

@@ -42,6 +42,12 @@ dependencies = [
     { name = "tqdm" },
 ]
 
+[package.dev-dependencies]
+dev = [
+    { name = "pytest" },
+    { name = "ruff" },
+]
+
 [package.metadata]
 requires-dist = [
     { name = "pydantic", specifier = ">=2.13.4" },
@@ -50,6 +56,12 @@ requires-dist = [
     { name = "ruff", specifier = ">=0.15.15" },
     { name = "structlog", specifier = ">=25.5.0" },
     { name = "tqdm", specifier = ">=4.67.3" },
+]
+
+[package.metadata.requires-dev]
+dev = [
+    { name = "pytest", specifier = ">=9.0.3" },
+    { name = "ruff", specifier = ">=0.15.15" },
 ]
 
 [[package]]
