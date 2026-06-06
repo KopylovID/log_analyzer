@@ -43,6 +43,9 @@ indent-style = "space"
 minversion = "9.0"
 testpaths = ["tests"]
 addopts = "-v"
+log_cli = false
+log_file = "app-logs/test.log"
+disable_test_id_escaping_and_forfeit_all_rights_to_community_support = true # Отключение маскирования кириллицы
 
 [dependency-groups]
 dev = [

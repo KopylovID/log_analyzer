@@ -15,14 +15,14 @@ class LogAnalizer:
     def __init__(self, config: Config, log: Logger):
         self.config = config
         self.log = log
-        self.pattern = self.__get_pattern__()
+        self.pattern = self._get_pattern()
 
-    def __count_lines__(self, log_path: Path):
+    def _count_lines(self, log_path: Path):
         """Получение общего количества строк в файле"""
         with open(log_path, 'rb') as f:
             return sum(1 for _ in f)
 
-    def __try_cast_to_float__(self, value: str, default=0.0):
+    def _try_cast_to_float(self, value: str, default=0.0):
         """Попытка преобразование во float"""
         if value is None:
             return default
@@ -32,7 +32,7 @@ class LogAnalizer:
         except (ValueError, TypeError):
             return default
 
-    def __get_pattern__(self):
+    def _get_pattern(self):
         """Возвращает скомпилированный паттерн для парсинга логов"""
         return re.compile(
             r'(?P<ip>\S+)\s+\S+\s+\S+\s+\[(?P<time>[^\]]+)\]\s+"(?P<method>\S+)\s+(?P<url>\S+)\s+(?P<protocol>[^"]+)"\s+(?P<status>\d{3})\s+(?P<size>\d+)\s+"[^"]*"\s+'
@@ -43,18 +43,18 @@ class LogAnalizer:
     def analize(self):
         """Основная процедура запуска парсинга логов"""
         self.log.debug('Получаем путь к анализируемому журналу')
-        log_path = self.__get_log_path__()
+        log_path = self._get_log_path()
         self.log.debug('Путь к анализируемому журналу', log_path=log_path)
 
-        pattern = self.__get_pattern__()
+        pattern = self._get_pattern()
         analize: Dict = dict()
-        file_count_lines = self.__count_lines__(log_path)
+        file_count_lines = self._count_lines(log_path)
 
         self.log.debug('Парсинг')
         response_amount = 0
         error_amount = 0
         with tqdm(total=file_count_lines, desc='Парсинг') as pbar:
-            for line in self.__read_file_lines__(log_path):
+            for line in self._read_file_lines(log_path):
                 response_amount += 1
                 result = pattern.match(line.strip())
                 if result:
@@ -64,7 +64,7 @@ class LogAnalizer:
                     response_duration = data.get('response_duration')
                     if url not in analize:
                         analize[url] = {'request_time_list': []}
-                    analize[url]['request_time_list'].append(self.__try_cast_to_float__(response_duration))
+                    analize[url]['request_time_list'].append(self._try_cast_to_float(response_duration))
                     pbar.update(1)
                 else:
                     error_amount += 1
@@ -106,15 +106,15 @@ class LogAnalizer:
         ]
 
         self.log.debug('Формирование отчета')
-        template = Template('\n'.join(list(self.__read_file_lines__(self.config.report.template_path))))
+        template = Template('\n'.join(list(self._read_file_lines(self.config.report.template_path))))
         report_data = template.safe_substitute(table_json=result_data_trunc)
 
         match = re.search(self.config.log.name_template, str(log_path))
         report_date = ''.join(match.groups('log_date')[:-1]) if match else ''
 
-        self.__write_report__(self.__get_report_path__(report_date), report_data)
+        self._write_report(self._get_report_path(report_date), report_data)
 
-    def __read_file_lines__(self, log_path: Path):
+    def _read_file_lines(self, log_path: Path):
         """Функиця построчного чтение файла"""
         try:
             with open(log_path, mode='r', encoding='UTF-8') as file:
@@ -125,12 +125,12 @@ class LogAnalizer:
         except Exception:
             self.log.error('Ошибка при чтении файла', log_file_name=log_path.name, exc_info=True)
 
-    def __get_report_path__(self, report_date: str):
+    def _get_report_path(self, report_date: str):
         """Функиця получения пути сохранения отчета"""
         report_dir = Path(self.config.report.dir)
         return report_dir.joinpath(Template(self.config.report.name_template).safe_substitute(report_date=report_date))
 
-    def __write_report__(self, report_path: Path, data: str):
+    def _write_report(self, report_path: Path, data: str):
         """Функиця записи в файл отчета"""
         try:
             with open(report_path, 'w', encoding='UTF-8') as file:
@@ -140,7 +140,7 @@ class LogAnalizer:
         except Exception:
             self.log.error('Ошибка при чтении файла', log_file_name=report_path.name, exc_info=True)
 
-    def __scan_dir__(self, path: str, template: str) -> Dict[str, Path]:
+    def _scan_dir(self, path: str, template: str) -> Dict[str, Path]:
         """Функиця сканирования репозитория логов"""
         result = {}
         regex = re.compile(template)
@@ -155,13 +155,13 @@ class LogAnalizer:
 
         return result
 
-    def __get_log_path__(self) -> Path:
+    def _get_log_path(self) -> Path:
         """Функиця поиска актуального журнала"""
         log_path: Path = None
 
         log_dir_path = Path(self.config.log.dir)
         if self.config.log.name is None:
-            file_dict = self.__scan_dir__(log_dir_path, self.config.log.name_template)
+            file_dict = self._scan_dir(log_dir_path, self.config.log.name_template)
             log_path = file_dict[max(file_dict)]
         else:
             log_path = log_dir_path.joinpath(self.config.log.name)
