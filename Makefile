@@ -1,7 +1,7 @@
 .PHONY: test # Помечаем папку test как фиктивную
 
 test:
-	uv run pytest -
+	uv run pytest -v
 
 ruff:
     # --exit-non-zero-on-fix выходит с отрицательным результатом
