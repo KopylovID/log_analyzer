@@ -27,3 +27,5 @@
 2. Выполняем команду ```bash uv sync```
 3. Настраиваем файл `.env` на основе `.env.example`
 4. Запускаем проект python3 main.py
+
+![img.png](img.png)
